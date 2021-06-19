@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+{% load custom_tags %}
+<form method="post" name="leaverequestform" id="id_leaverequestform" autocomplete="off">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    <p>
+    {{ form.source.errors }}
+    {{ form.source }}
+    </p>
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="row mb-4">
+            <div class="col">
+                <h5 class="card-title text-center">Leave Application</h5>
+            </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+                <span class="two-inputs">
+                {{ form.leavefrom.errors }}
+                {{ form.leavefrom|add_classes:'form-control' }}
+                </span>
+              <label class="form-label" for="leavefrom">From Date</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+                <span class="two-inputs">
+                {{ form.leavetill.errors }}
+                {{ form.leavetill|add_classes:'form-control' }}
+                </span>
+              <label class="form-label" for="leavetill">Till Date</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col">
+                <div class="form-outline mb-4">
+                    {{ form.purpose.errors }}
+                    {{ form.purpose|add_classes:'form-control' }}
+                <label class="form-label" for="purpose">Purpose</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-outline mb-4">
+                    {{ form.is_sick.errors }}
+                    {{ form.is_sick|add_classes:'form-control' }}
+                <label class="form-label" for="purpose">Is this Sick Leave? </label>
+                </div>
+            </div>
+        </div>
+        <!-- Text input -->
+        
+        <!-- Message input -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="form-outline mb-4">
+                    {{ form.comments.errors }}
+                    {{ form.comments|add_classes:'form-control' }}
+                <label class="form-label" for="form6Example7">Comments</label>
+                </div>
+            </div>
+        </div>
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Apply Leave</button>
+    </form>
+
+{% endblock %}
+{% block jscripts %}
+<script>
+    function on_submit_form(){
+    }
+    $('#id_leavefrom').keydown(function(e) {
+        e.preventDefault();
+        return false;
+    });
+    $('#id_leavetill').keydown(function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+</script>
+<script>
+    $(function()
+    {
+    
+        if (!window['console'])
+        {
+            window.console = {};
+            window.console.log = function(){};
+        }
+        $.dateRangePickerLanguages['custom'] =
+        {
+        'selected': 'Choosed:',
+        'days': 'Days',
+        'apply': 'Close',
+        'week-1' : 'Mon',
+        'week-2' : 'Tue',
+        'week-3' : 'Wed',
+        'week-4' : 'Thu',
+        'week-5' : 'Fri',
+        'week-6' : 'Sat',
+        'week-7' : 'Sun',
+        'month-name': ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        'shortcuts' : 'Shortcuts',
+        'past': 'Past',
+        '7days' : '7days',
+        '14days' : '14days',
+        '30days' : '30days',
+        'previous' : 'Previous',
+        'prev-week' : 'Week',
+        'prev-month' : 'Month',
+        'prev-quarter' : 'Quarter',
+        'prev-year' : 'Year',
+        'less-than' : 'Date range should longer than %d days',
+        'more-than' : 'Date range should less than %d days',
+        'default-more' : 'Please select a date range longer than %d days',
+        'default-less' : 'Please select a date range less than %d days',
+        'default-range' : 'Please select a date range between %d and %d days',
+        'default-default': 'This is costom language'
+        };
+        $('.two-inputs').dateRangePicker(
+        {
+            separator : ' to ',
+            getValue: function()
+            {
+                if ($('#id_leavefrom').val() && $('#id_leavetill').val() )
+                    return $('#id_leavefrom').val() + ' to ' + $('#id_leavetill').val();
+                else
+                    return '';
+            },
+            setValue: function(s,s1,s2)
+            {
+                $('#id_leavefrom').val(s1);
+                $('#id_leavetill').val(s2);
+            }
+        });
+    });
+    </script>
+<script>
+
+    $(function () {
+        $("#id_leavefrom1").datepicker({
+            dateFormat: 'yy-mm-dd',
+            numberOfMonths: 2,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function (selected) {
+                var dt = new Date(selected);
+                dt.setDate(dt.getDate());
+                $("#id_leavetill").datepicker("option", "minDate", dt);
+            }
+        });
+        $("#id_leavetill1").datepicker({
+            dateFormat: 'yy-mm-dd',
+            numberOfMonths: 2,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function (selected) {
+                var dt = new Date(selected);
+                dt.setDate(dt.getDate() );
+                $("#id_leavefrom").datepicker("option", "maxDate", dt);
+            }
+        });
+    }); 
+    $("#id_leavetill").on('blur', function(){    
+        //check_noleave_overlap();
+    });
+    $("#id_leavefrom").on('blur', function(){    
+        //$("#id_leavetill").val() = '';
+    });
+    $(".btapply").click(function(e){
+        alert('');
+        //e.preventDefault();
+        if (check_noleave_overlap()){
+            //event.preventDefault();
+            return false;
+        }
+        $('#id_leaverequestform').submit();
+        //return (true);
+    });
+    
+    function form_validate(){
+        document.leaverequestform.submit();
+        // retval = check_leave_overlap();
+        // alert(retval );
+        //if(retval) document.leaverequestform.submit();
+        //return(retval);
+    }
+
+</script>
+{% endblock %}
+
+{% block footer%}
+{% include 'inc/footer.html' %}
+{% endblock %}

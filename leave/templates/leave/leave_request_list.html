@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+<div class="table-responsive-sm">
+    <div class="d-flex text-white text-uppercase">
+      <div class="p-2 flex-shrink-1 bg-warning"></div>
+      <div class="p-2 w-100 bg-secondary"><h4><b>Leave Requests</b></h4></div>
+      <div class="p-2 flex-shrink-1 bg-warning"></div>
+    </div>
+    <table class="table table-sm table-bordered table-striped mb-0">
+      <thead>
+        <tr>
+          <th scope="col">Employee</th>
+          <th scope="col">Leave Date</th>
+          <th scope="col">Total Days</th>
+          <th scope="col">Status</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+{% for instance in requests %}
+        <tr> 
+          <td><a href="{% url 'Employee:employee-detail' id=instance.id %}">{{ instance.employee.emp_code|add:" - "|add:instance.employee.get_full_name }}</a></td>
+          <td><a href="{% url 'leave:leave-detail' id=instance.id  %}" title="Click to View" class="btn btn-sm btn-primary btn-outline-primary" 
+            role="button" aria-pressed="true"><b>{{ instance.leavefrom }} -- {{ instance.leavetill }}</b></a></td>
+          <td>{{ instance.get_leave_duration }} Day/s</td>
+          {% if instance.first_approver_status == instance.PENDING and instance.leave_state == instance.PENDING %}
+          <td>Level-1 Pending</td>
+          {% elif instance.second_approver_status == instance.PENDING and instance.leave_state == instance.PENDING %}
+          <td>Level-2 Pending</td>
+          {% else %}
+          <td></td>
+          {% endif%}
+          <td><a href="{% url 'leave:leave-approve' id=instance.id  %}" class="btn btn-success btn-sm active" 
+            role="button" aria-pressed="true" onclick = "return getConfirmation();">Approve</a>
+            <a href="{% url 'leave:leave-reject' id=instance.id  %}" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Reject</a>
+          </td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block footer%}
+<script>
+    <!--
+            function getConfirmation() {
+               var retVal = confirm("Do you want to continue ?");
+               if( retVal == true ) {
+                  return true;
+               } else {
+                  return false
+               }
+            }
+         //-->
+ </script>
+{% include 'inc/footer.html' %}
+{% endblock %}

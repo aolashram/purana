@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+<div class="table-responsive-sm">
+
+    <table class="table table-sm table-bordered table-striped mb-0">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Shift name</th>
+          <th scope="col">Shift Type</th>
+          <th scope="col">From</th>
+          <th scope="col">Margin From</th>
+          <th scope="col">Margin Till</th>
+        </tr>
+      </thead>
+      <tbody>
+{% for instance in object_list %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td><a href="{% url 'eattendance:shift-detail' pk=instance.id %}">{{ instance.name }}</a></td>
+          <td>{{ instance.shift_type }}</td>
+          <td>{{ instance.shift_from }}</td>
+          <td>{{ instance.shift_to }}</td>
+          <td>{{ instance.margin_before }}</td>
+          <td>{{ instance.margin_after }}</td>
+          <td><a href="{% url 'eattendance:shift-update' pk=instance.id  %}" class="btn btn-info btn-sm success" role="button" aria-pressed="true">Edit</a></td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block footer%}
+{% include 'inc/footer.html' %}
+{% endblock %}

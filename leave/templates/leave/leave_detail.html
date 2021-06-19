@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+{% load custom_tags %}
+<div class="row">
+    <div class="col-sm" style="background-color:rgb(255, 255, 255);"><h3>Casual Leave <span class="badge bg-primary">{{ leavebalance|dictitem:'CL' }}</span></h3></div>
+    <div class="col-sm" style="background-color:rgb(217, 218, 221);"><h3>Earned Leave <span class="badge bg-success">{{ leavebalance|dictitem:'EL' }}</span></h3></div>
+    <div class="col-sm" style="background-color:rgb(255, 255, 255);"><h3>Sick Leave <span class="badge bg-info">{{ leavebalance|dictitem:'SL' }}</span></h3></div>
+    <div class="col-sm" style="background-color:rgb(217, 218, 221);"><h3>Loss of Pay <span class="badge bg-danger">{{ leavebalance|dictitem:'LOP' }}</span></h3></div>
+
+</div>
+<br/><br/>
+<div class="row">
+    <div class="col-sm-3" style="background-color:rgb(201, 201, 187);">Leave from</div>
+    <div class="col-sm-9" style="background-color:rgb(238, 238, 238);">{{ object.leavefrom }}</div>
+</div>
+<div class="row">
+    <div class="col-sm-3" style="background-color:rgb(246, 250, 246);">Leave Till</div>
+    <div class="col-sm-9" style="background-color:rgb(250, 250, 250);">{{ object.leavetill }}</div>
+</div>
+<div class="row">
+    <div class="col-sm-3" style="background-color:rgb(201, 201, 187);">Leave Status</div>
+    <div class="col-sm-9" style="background-color:rgb(238, 238, 238);">{{ object.leave_state }}</div>
+</div>
+<div class="row">
+    <div class="col-sm-3" style="background-color:rgb(255, 255, 255);">Purpose</div>
+    <div class="col-sm-9" style="background-color:rgb(252, 253, 251);">{{ object.purpose }}</div>
+</div>
+  <br>
+{% endblock %}
+{% block footer%}
+{% include 'inc/footer.html' %}
+{% endblock %}

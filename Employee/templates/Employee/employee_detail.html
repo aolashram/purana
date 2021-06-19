@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block menu_dropdown %}
+{% include 'inc/nav_dropdown_menu.html'%}
+{% endblock %}
+{% block content %}
+<h1>{{ object.first_name }}</h1>
+<p>{{ object.last_name }}  -  {{ object.department }} </p>
+{% endblock %}
+{% block footer%}
+{% include 'inc/footer.html' %}
+{% endblock %}

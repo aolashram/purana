@@ -1,0 +1,43 @@
+{% load static %}
+{% load humanize %}
+{% block menu_dropdown %}
+<li class="user-profile header-notification">
+    <a href="#!">
+        <img src="{% static 'assets/images/userlogo.png' %}" class="img-radius" alt="User-Profile-Image">
+        <span>{{employee}}</span>
+        <i class="ti-angle-down"></i>
+    </a>
+    <ul class="show-notification profile-notification">
+        {% comment %}
+        <li>
+            <a href="#!">
+                <i class="ti-settings"></i> Settings
+            </a>
+        </li>
+        {% endcomment %}
+        <li>
+            <a href="/employee/{{employee.id}}">
+                <i class="ti-user"></i> Profile
+            </a>
+        </li>
+        {% comment %}
+        <li>
+            <a href="#">
+                <i class="ti-email"></i> My Messages
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="ti-lock"></i> Lock Screen
+            </a>
+        </li>
+        {% endcomment %}
+        <li>
+            <a href="{% url 'accounts:logout' %}">
+                <i class="ti-layout-sidebar-left"></i> Logout
+            </a>
+        </li>
+    </ul>
+</li>
+
+{% endblock %}

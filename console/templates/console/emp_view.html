@@ -1,0 +1,48 @@
+{% load console_tags %}
+<div class="page-body">
+    <div class="row">
+        {% for key,value in taken_leaves.items %}
+        <div class="col-sm-3">
+            {% if forloop.counter == 1 %}
+            <div class="card bg-info">
+            {% elif forloop.counter == 2 %}
+            <div class="card bg-success">
+            {% elif forloop.counter == 3 %}
+            <div class="card bg-primary">
+            {% else %}
+            <div class="card bg-warning">
+            {% endif %}
+                <div class="card-header">
+                    <h2>{{ key }}</h2>
+                </div>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-sm">
+                          Total
+                        </div>
+                        <div class="col-sm">
+                          Taken
+                        </div>
+                        <div class="col-sm">
+                            Balance
+                          </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            {% with total=leave_totals|dictitem:key|default:0 %}
+                            <h3>{{ total }}</h3>
+                        </div>
+                        <div class="col-sm">
+                            <h3>{{ value }}</h3>
+                        </div>
+                        <div class="col-sm">
+                            <h3>{{ total|subtract:value }}</h3>
+                        </div>
+                        {% endwith %}   
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

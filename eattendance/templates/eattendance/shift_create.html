@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+{% load eatt_tags %}
+{% csrf_token %}
+<form method="post" name="shiftcreateform" id="shiftcreateform" autocomplete="off">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    <p>
+    {{ form.source.errors }}
+    {{ form.source }}
+    </p>
+    <!-- 2 column grid layout with text inputs for the first and last names -->
+    <div class="card-details">
+        <h3 class="title">Shift Details</h3>
+        <div class="row">
+            <div class="form-group col-sm-12">
+              <label for="card-holder">Shift Type</label>
+              {{ form.shift_type|add_classes:'form-control' }}
+            </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <label for="card-holder">Shift Title</label>
+            {{ form.name|add_classes:'form-control' }}
+          </div>
+          
+          <div class="form-group col-sm-2">
+            <label for="">Shift from</label>
+            <div class="input-group expiration-date">
+                {{ form.shift_from|add_classes:'form-control' }}
+            </div>
+            
+          </div>
+          <div class="form-group col-sm-2">
+            <label for="">Shift till</label>
+            <div class="input-group expiration-date">
+                {{ form.shift_to|add_classes:'form-control' }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="card-holder">Shift Margin</label>
+                {{ form.shift_margin|add_classes:'form-control' }}
+              </div>
+            <div class="form-group col-sm-2">
+                <label for="">Margin from</label>
+                <div class="input-group expiration-date">
+                    {{ form.margin_before|add_classes:'form-control' }}
+                </div>
+                
+              </div>
+              <div class="form-group col-sm-2">
+                <label for="">Margin till</label>
+                <div class="input-group expiration-date">
+                    {{form.margin_after|add_classes:'form-control'}}
+                </div>
+              </div>
+        </div>
+        <div class="row">
+
+          <div class="form-group col-sm-12">
+            <button type="submit" class="btn btn-primary btn-block">Proceed</button>
+          </div>
+        </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block footer%}
+
+{% include 'inc/footer.html' %}
+<script>
+    marginbefore= document.getElementById('id_margin_before');
+    marginafter = document.getElementById('id_margin_after');
+    $(function () {
+        marginafter.disabled = true;
+        marginbefore.disabled = true;
+    });
+    $('#id_shift_margin').change(function(e){
+        if ( $('#id_shift_margin').val()=='True' ){
+            marginafter.disabled = false;
+            marginbefore.disabled = false;
+        }else{
+            marginafter.disabled = true;
+            marginbefore.disabled = true;
+        }
+    }); 
+</script>
+{% endblock %}

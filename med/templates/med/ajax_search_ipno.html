@@ -1,0 +1,22 @@
+{% if patients %}
+    {% for patient in patients %}
+        <div class="list-group"> 
+            <a class="list-group-item list-group-item-action" onclick='fillPatientDetails({{patient.id}});'>  
+                <span class="badge badge-primary badge-pill">Name: &nbsp;{{patient.patient.fullname}}  &#9;</span> 
+                <span class="badge badge-primary badge-pill">IPNo: &nbsp;{{patient.ipno}}&#9;</span> 
+                <span class="badge badge-primary badge-pill">MRNo: &nbsp;{{patient.patient.mrno}}&#9;</span> 
+            </a> 
+            <input type="hidden" id="ipno_{{patient.id}}" value="{{patient.ipno}}">
+            <input type="hidden" id="fullname_{{patient.id}}" value="{{patient.patient.fullname}}">
+            <input type="hidden" id="mrno_{{patient.id}}" value="{{patient.patient.mrno}}">
+            <input type="hidden" id="age_{{patient.id}}" value="{{patient.patient.age}}">
+            <input type="hidden" id="gender_{{patient.id}}" value="{{patient.patient.gender}}">
+            <input type="hidden" id="doctor_{{patient.id}}" value="{{patient.doctor.id}}">
+            <input type="hidden" id="building_floor_{{patient.id}}" value="{{patient.building_floor.id}}">
+            <input type="hidden" id="room_{{patient.id}}" value="{{patient.room.id}}">
+            <input type="hidden" id="bedno_{{patient.id}}" value="{{patient.bedno.id}}">
+        </div>
+    {% endfor %}
+{% else %}
+    <li class="list-group-item"><span class="text-secondary">No patients found.</span ></li>
+{% endif %}

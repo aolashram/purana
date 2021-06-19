@@ -1,0 +1,170 @@
+{% load console_tags %}
+<div class="page-body">
+    <div class="row">
+        {% for key,value in taken_leaves.items %}
+        <div class="col-sm-3">
+            {% if forloop.counter == 1 %}
+            <div class="card bg-info">
+            {% elif forloop.counter == 2 %}
+            <div class="card bg-success">
+            {% elif forloop.counter == 3 %}
+            <div class="card bg-primary">
+            {% else %}
+            <div class="card bg-warning">
+            {% endif %}
+                <div class="card-header">
+                    <h2>{{ key }}</h2>
+                </div>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-sm">
+                          Total
+                        </div>
+                        <div class="col-sm">
+                          Taken
+                        </div>
+                        <div class="col-sm">
+                            Balance
+                          </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            {% with total=leave_totals|dictitem:key|default:0 %}
+                            <h3>{{ total }}</h3>
+                        </div>
+                        <div class="col-sm">
+                            <h3>{{ value }}</h3>
+                        </div>
+                        <div class="col-sm">
+                            <h3>{{ total|subtract:value }}</h3>
+                        </div>
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card  badge-light">
+                <div class="card-header">
+                    <h3><label class="col-form-label text-danger"><b>Who is on leave today?</b></label></h3>
+                </div>
+                <div class="card-block">                                                        
+                    <table class="table table-hover badge-light">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Staff Name</th>
+                                <th>Leave Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emps in today_leave_emp %}   
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ emps.employee.get_full_name }}</td>
+                                <td>{{ emps.get_leave_duration }} Days</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>                                                    
+                </div>
+            </div>                                                
+        </div>
+        <div class="col-sm-6"> 
+            <div class="card">
+                <div class="card-header">
+                    <h5><label class="col-form-label text-primary">Announcements</label></h5>
+                    <span></span>
+                    <div class="card-header-right">
+                        <ul class="list-unstyled card-option" style="width: 35px;">
+                            <li class=""><i class="icofont icofont-simple-left"></i></li>
+                            <li><i class="icofont icofont-maximize full-card"></i></li>
+                            <li><i class="icofont icofont-minus minimize-card"></i></li>
+                            <li><i class="icofont icofont-refresh reload-card"></i></li>
+                            <li><i class="icofont icofont-error close-card"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-block">
+                    <p>
+                        <li>"Submit Your NABH Documents as soon as possible to the the NABH coordinator"</li>
+                        <!--<li>"Last day for submitting Budget sheet of your department will be 31/Apr/2021"</li>
+                        <li>"Wearing Mask is compulsory, a penalty of Rs250 will be charged if anyone violates"</li>
+                        <li>"Maintain social distencing !"</li>-->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End-Who is on leave today-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-block">
+                    <div class="container mt-3">
+                        <h5>Pending Leave requests</h5>
+                        <br>
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home">Pending Request</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#menu1">Archive</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#menu2">...</a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div id="home" class="container tab-pane active">
+                                <div class="card-block table-border-style">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Application Date</th>
+                                                    <th>Staff Name</th>
+                                                    <th>Leave Date</th>
+                                                    <th>Duration</th><!--
+                                                    <th>Approve</th>
+                                                    <th>Reject</th>-->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for p in pending_leave_list%}
+                                                <tr>
+                                                    <th scope="row">{{ forloop.counter }}</th>
+                                                    <td>{{ p.applied_date }}</td>
+                                                    <td>{{ p.employee.get_full_name }}</td>
+                                                    <td>{{ p.leavefrom }} - {{ p.leavetill }}</td>
+                                                    <td>{{ p.get_leave_duration }} Days</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="menu1" class="container tab-pane fade"><br>
+                            <h3>Coming Soon.....</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
+                            <div id="menu2" class="container tab-pane fade"><br>
+                            <h3>Coming Soon....</h3>
+                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

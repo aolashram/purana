@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+{% load med_custom_tags %}
+<form method="post" name="visitorcreateform" action="" id="visitorcreateform" autocomplete="off" data-rooms-url="{% url 'med:ajax_load_rooms' %}" data-beds-url="{% url 'med:ajax_load_beds' %}">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    <p>
+    {{ form.source.errors }}
+    {{ form.source }}
+    </p>
+    <!-- 2 column grid layout with text inputs for the first and last names -->
+    <div class="card-details">
+        <h3 class="title">Visitor Info</h3>
+        <div class="row">
+            <div class="form-group col-sm-4">
+              <label for="card-holder">Full Name</label>
+              {{ form.fullname|add_classes:'form-control' }}
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="card-holder">MR No</label>
+                {{ form.mrno|add_classes:'form-control' }}
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="">Ip No</label>
+                <div class="input-group expiration-date">
+                  {{ form.ipno|add_classes:'form-control' }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="card-holder">Age</label>
+                {{ form.age|add_classes:'form-control' }}
+              </div>
+              <div class="form-group col-sm-4">
+                  <label for="card-holder">Gender</label>
+                  {{ form.gender|add_classes:'form-control' }}
+              </div>
+              <div class="form-group col-sm-4">
+                  <label for="">Department</label>
+                  <div class="input-group expiration-date">
+                    {{ form.department|add_classes:'form-control' }}
+                  </div>
+              </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label for="card-holder">Building/Floor</label>
+                {{ form.building_floor|add_classes:'form-control' }}
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="card-holder">Room</label>
+                {{ form.room|add_classes:'form-control' }}
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="card-holder">Bed no</label>
+                {{ form.bedno|add_classes:'form-control' }}
+            </div>
+        </div>
+        <div class="row">
+
+          <div class="form-group col-sm-12">
+            <button type="submit" class="btn btn-primary btn-block">Proceed</button>
+          </div>
+        </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block footer%}
+
+{% include 'inc/footer.html' %}
+<script>
+    marginbefore= document.getElementById('id_margin_before');
+    marginafter = document.getElementById('id_margin_after');
+    $(function () {
+        marginafter.disabled = true;
+        marginbefore.disabled = true;
+    });
+    $('#id_shift_margin').change(function(e){
+        if ( $('#id_shift_margin').val()=='True' ){
+            marginafter.disabled = false;
+            marginbefore.disabled = false;
+        }else{
+            marginafter.disabled = true;
+            marginbefore.disabled = true;
+        }
+    }); 
+    
+</script>
+<script>
+    $("#id_building_floor").change(function () {
+      var url = $("#visitorcreateform").attr("data-rooms-url");  // get the url of the `load_cities` view
+      var areaId = $(this).val();  // get the selected country ID from the HTML input
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'area': areaId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_room").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+
+    $("#id_room").change(function () {
+      var url = $("#visitorcreateform").attr("data-beds-url");  // get the url of the `load_cities` view
+      var roomId = $(this).val();  // get the selected country ID from the HTML input
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'room': roomId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_bedno").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
+{% endblock %}

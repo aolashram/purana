@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+<div class="">
+    <div class="d-flex text-white text-uppercase">
+      <div class="p-2 flex-shrink-1 bg-warning"></div>
+      <div class="p-2 w-100 bg-dark"><b>{{monthname}}</b></div>
+      <div class="p-2 flex-shrink-1 bg-warning"></div>
+    </div>
+    
+    {{ table|safe }}
+    <!-- <table border="1" width="100%" style="border-color: rgb(199, 190, 199);">
+      <thead style="background-color:rgb(236, 236, 235)">
+        <tr align="center">
+          <th class="p-2">Name</th>
+          {% for d in days%}
+          <th>{{ d }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>   
+          <td class="p-2">{{emp.get_full_name}}</td>
+          {% for d in days%}
+          {% if d > 4%}
+          <td width=3% class=""><i style="color: green;" class="ti-control-record icon-green "></i></td>
+          {% else%}
+          <td width=3% class="table-danger"><i style="color: green;" class="ti-control-record icon-green "></i></td>
+          {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table> -->
+    
+    
+</div>
+{% endblock %}
+{% block footer%}
+<script>
+    <!--
+            function getConfirmation() {
+               var retVal = confirm("Do you want to continue ?");
+               if( retVal == true ) {
+                  return true;
+               } else {
+                  return false
+               }
+            }
+         //-->
+ </script>
+{% include 'inc/footer.html' %}
+{% endblock %}

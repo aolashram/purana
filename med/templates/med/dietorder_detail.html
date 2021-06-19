@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+{% load med_custom_tags %}
+<div class="card">
+    <div class="card-header">
+     <h3>Diet Order - Details</h3> 
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{object.patient.patient.fullname  }}</h5>
+      <div class="row">
+        <div class="col-sm-3">IP No</div>
+        <div class="col-sm-9">{{object.patient.ipno}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">Location</div>
+        <div class="col-sm-9">{{object.patient.building_floor}} / <b>{{object.patient.room}}-{{object.patient.bedno}}</b></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">Doctor</div>
+        <div class="col-sm-9">{{object.patient.doctor}}</div>
+      </div>
+      <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+      <div class="row">
+        <div class="col-sm-12"><h4>{{object.item}}</h4></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">Item Category</div>
+        <div class="col-sm-9">{{object.category}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">Date of Delivery</div>
+        <div class="col-sm-9">{{object.delivery_date}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">Time slot</div>
+        <div class="col-sm-9">{{object.slot}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">Special Instructions</div>
+        <div class="col-sm-9">{{object.special_instruction}}</div>
+      </div>
+      <br/>
+      <a href="{% url 'med:leave-update' id=object.id %}" class="btn btn-primary">Edit</a>
+    </div>
+  </div>
+{% endblock %}
+{% block footer%}
+{% include 'inc/footer.html' %}
+{% endblock %}

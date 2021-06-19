@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+{% load med_custom_tags %}
+<style>
+    body{
+        font-family: Arail, sans-serif;
+    }
+    .dmenu {
+        text-align: center;
+        font-family: 'Roboto Slab', serif;
+        margin-top: 10%;
+    }
+
+    .dmenu a {
+        color: white;
+        background-color: #5A827F;
+        padding: 5px 11px;
+        border-style: 2px solid
+    }
+
+    .dmenu a:hover {
+
+        border:1px solid #fff;
+    }
+    /* Formatting search box */
+    .search-box{
+        width: 300px;
+        position: relative;
+        display: inline-block;
+        font-size: 14px;
+    }
+    .search-box input[type="text"]{
+        height: 32px;
+        padding: 5px 10px;
+        border: 1px solid #CCCCCC;
+        font-size: 14px;
+    }
+    .result{
+        position: absolute;        
+        z-index: 999;
+        top: 100%;
+        left: 0;
+    }
+    .search-box input[type="text"], .result{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    /* Formatting result items */
+    .result p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+    }
+    .result p:hover{
+        background: #f2f2f2;
+    }
+</style>
+<form method="post" name="dietorderform" action="" id="dietorderform" autocomplete="off" 
+    data-rooms-url="{% url 'med:ajax_load_rooms' %}" data-beds-url="{% url 'med:ajax_load_beds' %}" 
+    data-livesearch-url="{% url 'med:ajax_livesearch' %}">
+{% csrf_token %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title"><strong>Diet Form</strong></h2>
+        <hr/>
+    </div>
+    <div class="panel-body ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row"><h5><span class="text-success">Diet Details</span></h5><hr/></div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-md-1 control-label">Diet Category</label>
+                        <div class="col-md-4">
+                            {{ form.category|add_classes:'form-control' }}
+                        </div>
+                        <label class="col-md-1 control-label">Diet Item</label>
+                        <div class="col-md-3">
+                            {{ form.item|add_classes:'form-control' }}
+                        </div>
+                        <label class="col-md-1 control-label">Quantity</label>
+                        <div class="col-md-2">
+                            {{ form.quantity|add_classes:'form-control' }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-1 control-label">Instructions</label>
+                        <div class="col-md-3">
+                            {{ form.special_instruction|add_classes:'form-control' }}
+                        </div>
+                        <label class="col-md-1 control-label">Delivery date</label>
+                        <div class="col-md-3">
+                            {{ form.delivery_date|add_classes:'form-control' }}
+                        </div>
+                        <label class="col-md-1 control-label">Time Slot</label>
+                        <div class="col-md-3">
+                            {{ form.slot|add_classes:'form-control' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        <div class="row align-items-start">
+            <div class="col-md-12 ">
+                <div class="row"><h5><span class="text-primary">Patient Info</span></h5><hr/></div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-md-1 control-label">IP No</label>
+                        <div class="col-md-5">
+                            {{ form.ipno|add_classes:'form-control form-control-sm' }}
+                            <div id="search-results"></div>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-md-1 control-label">MR No</label>
+                        <div class="col-md-4">
+                            {{ form.mrno|add_classes:'form-control form-control-sm' }}
+                        </div>
+                        <label class="col-md-1 control-label">Patient Name</label>
+                        <div class="col-md-6">
+                            {{ form.fullname|add_classes:'form-control form-control-sm' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-md-1">Age</label>
+                        <div class="col-md-2">
+                            {{ form.age|add_classes:'form-control form-control-sm' }}
+                        </div>
+                        <label class="col-md-1">Gender</label>
+                        <div class="col-md-2">
+                            {{ form.gender|add_classes:'form-control form-control-sm' }}
+                        </div>
+                        <label class="col-md-1 control-label">Doctor</label>
+                        <div class="col-md-5">
+                            {{ form.doctor|add_classes:'form-control form-control-sm' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-md-1 control-label">Building/Floor</label>
+                        <div class="col-md-3">
+                            {{ form.building_floor|add_classes:'form-control form-control-sm' }}
+                        </div>
+                        <label class="col-md-1">Room</label>
+                        <div class="col-md-3">
+                            {{ form.room|add_classes:'form-control form-control-sm' }}
+                        </div>
+                        <label class="col-md-1">Bed</label>
+                        <div class="col-md-3">
+                            {{ form.bedno|add_classes:'form-control form-control-sm' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row"><div class="col-md-12"><hr/>{{ form.doid }}</div></div>       
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-md btn-danger" id="btnCancel">
+                                Cancel <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                            <button class="btn btn-md btn-warning" id="btnReset">
+                                Reset Form <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                            <button class="btn btn-md btn-primary" id="btnSave" type="submit">
+                                Save Data <span class="glyphicon glyphicon-cloud-upload"></span>
+                            </button>
+                        </div>
+                        <div class="col-sm-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block footer%}
+
+{% include 'inc/footer.html' %}
+<script>
+    marginbefore= document.getElementById('id_margin_before');
+    marginafter = document.getElementById('id_margin_after');
+    $(function () {
+        marginafter.disabled = true;
+        marginbefore.disabled = true;
+    });
+    $('#id_shift_margin').change(function(e){
+        if ( $('#id_shift_margin').val()=='True' ){
+            marginafter.disabled = false;
+            marginbefore.disabled = false;
+        }else{
+            marginafter.disabled = true;
+            marginbefore.disabled = true;
+        }
+    }); 
+</script>
+<script>
+    $("#id_building_floor").change(function () {
+      var url = $("#dietorderform").attr("data-rooms-url");  // get the url of the `load_cities` view
+      var areaId = $(this).val();  // get the selected country ID from the HTML input
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'area': areaId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_room").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+
+    $("#id_room").change(function () {
+      var url = $("#dietorderform").attr("data-beds-url");  // get the url of the `load_cities` view
+      var roomId = $(this).val();  // get the selected country ID from the HTML input
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'room': roomId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_bedno").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
+   <script>
+    $(function() {
+       //$( "#id_delivery_date" ).datepicker();
+       //$('#id_delivery_date').datepicker('setDate', 'today');
+       $('#id_delivery_date').datepicker({ dateFormat: 'yy-mm-dd', minDate: 0});
+        $('#id_delivery_date').datepicker('setDate', new Date());
+    });
+    $(document).ready(function(){
+       $("#id_ipno").keyup(function(){
+          enablePData();
+          var url = $("#dietorderform").attr("data-livesearch-url");
+          var query = $(this).val();
+          if (query != "") {
+            $.ajax({
+              url: url,
+              method: 'GET',
+              data: {'q':query},
+              success: function(data){
+                $('#search-results').html(data);
+                $('#search-results').css('display', 'block');
+                $("#id_ipno").focusout(function(){
+                    window.setTimeout(function() { $('#search-results').hide() }, 100);
+                    //$('#search-results').css('display', 'none');
+                });
+                $("#id_ipno").focusin(function(){
+                    $('#search-results').css('display', 'block');
+                });
+              }
+            });
+          } else {
+          $('#search-results').css('display', 'none');
+        }
+      });
+    });
+    $("#search-results").mousedown(function(){
+        
+    });
+    function fillPatientDetails(pk){
+        ipno_elm = "#ipno_" + pk;
+        ipno = $(ipno_elm).val();
+        $('#id_ipno').val(ipno);
+        mrno_elm = "#mrno_" + pk;
+        mrno = $(mrno_elm).val();
+        $('#id_mrno').val(mrno);
+        fullname_elm = "#fullname_" + pk;
+        fullname = $(fullname_elm).val();
+        $('#id_fullname').val(fullname);
+        age_elm = "#age_" + pk;
+        age = $(age_elm).val();
+        $('#id_age').val(age);
+        gender_elm = "#gender_" + pk;
+        gender = $(gender_elm).val();
+        $('#id_gender').val(gender);
+        doctor_elm = "#doctor_" + pk;
+        doctor = $(doctor_elm).val();
+        $('#id_doctor').val(doctor);
+        building_floor_elm = "#building_floor_" + pk;
+        building_floor = $(building_floor_elm).val();
+        $('#id_building_floor').val(building_floor);
+        room_elm = "#room_" + pk;
+        room = $(room_elm).val();
+        $('#id_room').val(room);
+        bedno_elm = "#bedno_" + pk;
+        bedno = $(bedno_elm).val();
+        $('#id_bedno').val(bedno);
+        disablePData();
+    }
+    function disablePData(){
+        $("#id_gender").attr("disabled", "disabled");
+        $("#id_mrno").attr("disabled", "disabled");
+        $("#id_fullname").attr("disabled", "disabled");
+        $("#id_age").attr("disabled", "disabled");
+        $("#id_doctor").attr("disabled", "disabled");
+        $("#id_building_floor").attr("disabled", "disabled");
+        $("#id_room").attr("disabled", "disabled");
+        $("#id_bedno").attr("disabled", "disabled");
+    }
+    function enablePData(){
+        $("#id_gender").removeAttr("disabled");
+        $("#id_mrno").removeAttr("disabled");
+        $("#id_fullname").removeAttr("disabled");
+        $("#id_age").removeAttr("disabled");
+        $("#id_doctor").removeAttr("disabled");
+        $("#id_building_floor").removeAttr("disabled");
+        $("#id_room").removeAttr("disabled");
+        $("#id_bedno").removeAttr("disabled");
+    }
+ </script>
+{% endblock %}

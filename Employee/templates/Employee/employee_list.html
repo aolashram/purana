@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block structure %}
+{% include 'inc/structure.html'%}
+{% endblock %}
+{% block content %}
+<div class="table-responsive-sm">
+
+    <table class="table table-sm table-bordered table-striped mb-0">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Full name</th>
+          <th scope="col">Employee Code</th>
+          <th scope="col">Designation</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+{% for instance in object_list %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td><a href="{% url 'Employee:employee-detail' id=instance.id %}">{{ instance.get_full_name }}</a></td>
+          <td>{{ instance.emp_code }}</td>
+          <td>{{ instance.designation }}</td>
+          <td><a href="{% url 'leave:create-leave' id=instance.id  %}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">Apply Leave</a></td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block footer%}
+{% include 'inc/footer.html' %}
+{% endblock %}
